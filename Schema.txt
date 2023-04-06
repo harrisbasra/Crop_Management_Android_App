@@ -1,0 +1,2 @@
+Crops.txt {Name|Quality|Quantity|Date|Location|Price|PriceOK}
+Transporting.txt {Price|PriceOK}

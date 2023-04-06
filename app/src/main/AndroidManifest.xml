@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@drawable/sellers"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AgriTech"
+        tools:targetApi="31">
+        <activity
+            android:name=".Transporter_Upload_Rates"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_transporter_upload_rates"
+            android:theme="@style/Theme.AgriTech.Fullscreen" />
+        <activity
+            android:name=".Contractor_Pre_View_Bid"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_contractor_pre_view_bid"
+            android:theme="@style/Theme.AgriTech.Fullscreen" />
+        <activity
+            android:name=".Transporter_View_Jobs"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_transporter_view_jobs"
+            android:theme="@style/Theme.AgriTech.Fullscreen" />
+        <activity
+            android:name=".Tranporter_Bid_View"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_tranporter_bid_view"
+            android:theme="@style/Theme.AgriTech.Fullscreen" />
+        <activity
+            android:name=".Contractor_Transporter_View_2"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_contractor_transporter_view2"
+            android:theme="@style/Theme.AgriTech.Fullscreen" />
+        <activity
+            android:name=".Contractor_Transporter_View_1"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_contractor_transporter_view1"
+            android:theme="@style/Theme.AgriTech.Fullscreen" />
+        <activity
+            android:name=".Contractor_Option_Menu"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_contractor_option_menu"
+            android:theme="@style/Theme.AgriTech.Fullscreen" />
+        <activity
+            android:name=".Place_Bid"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_place_bid"
+            android:theme="@style/Theme.AgriTech.Fullscreen" />
+        <activity
+            android:name=".Bid_View"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_bid_view"
+            android:theme="@style/Theme.AgriTech.Fullscreen" />
+        <activity
+            android:name=".Farmer_View_2"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_farmer_view2"
+            android:theme="@style/Theme.AgriTech.Fullscreen" />
+        <activity
+            android:name=".Farmer_View_1"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_farmer_view1"
+            android:theme="@style/Theme.AgriTech.Fullscreen" />
+        <activity
+            android:name=".FarmerUploadRate"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_contractor"
+            android:theme="@style/Theme.AgriTech.Fullscreen" />
+        <activity
+            android:name=".Transporter"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_transporter"
+            android:theme="@style/Theme.AgriTech.Fullscreen" />
+        <activity
+            android:name=".Farmer"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_farmer"
+            android:theme="@style/Theme.AgriTech.Fullscreen" />
+        <activity
+            android:name=".FullscreenActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AgriTech.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

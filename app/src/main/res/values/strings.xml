@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">AgriTech</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_farmer">Farmer</string>
+    <string name="Title"></string>
+    <string name="title_activity_transporter">Transporter</string>
+    <string name="title_activity_contractor">Contractor</string>
+    <string name="title_activity_farmer_view1">Farmer_View_1</string>
+    <string name="title_activity_farmer_view2">Farmer_View_2</string>
+    <string name="title_activity_bid_view">Bid_View</string>
+    <string name="title_activity_place_bid">Place_Bid</string>
+    <string name="title_activity_contractor_option_menu">Contractor_Option_Menu</string>
+    <string name="title_activity_contractor_transporter_view1">Contractor_Transporter_View_1
+    </string>
+    <string name="title_activity_contractor_transporter_view2">Contractor_Transporter_View_2
+    </string>
+    <string name="title_activity_tranporter_bid_view">Tranporter_Bid_View</string>
+    <string name="title_activity_transporter_view">Transporter_View</string>
+    <string name="title_activity_transporter_view_jobs">Transporter_View_Jobs</string>
+    <string name="title_activity_contractor_pre_view_bid">Contractor_Pre_View_Bid</string>
+    <string name="title_activity_transporter_upload_rates">Transporter_Upload_Rates</string>
+</resources>
