@@ -7,14 +7,18 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.blockchain.agritech.databinding.ActivityFarmerUploadrateBinding;
@@ -23,6 +27,12 @@ import com.bumptech.glide.request.target.CustomViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 
 import org.jetbrains.annotations.Nullable;
+
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -153,15 +163,87 @@ public class FarmerUploadRate extends AppCompatActivity {
                         // handle resource cleared
                     }
                 });
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{"A", "B", "C"});
+        binding.spinnerA.setAdapter(adapter);
+
+        String Name = "" ;
+
+
+
+        try {
+            FileInputStream fin = openFileInput("WhoLoggedIn.txt");
+            int a;
+            StringBuilder temp = new StringBuilder();
+            while ((a = fin.read()) != -1) {
+                temp.append((char)a);
+            }
+            Name = temp.toString();
+            fin.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        String finalName = Name;
+        binding.floatingActionButton3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!(TextUtils.isEmpty(binding.textView5.getText()))&&
+                        (!TextUtils.isEmpty(binding.textView8.getText()))&&
+                        (!TextUtils.isEmpty(binding.textView4.getText()))&&
+                        (!TextUtils.isEmpty(binding.textView6.getText())))
+                {
+                    String Quantity = binding.textView5.getText().toString();
+                    String Date = binding.textView8.getText().toString();
+                    String Location = binding.textView4.getText().toString();
+                    String Price = binding.textView6.getText().toString();
+                    String Quality = binding.spinnerA.getSelectedItem().toString();
+
+                    String content = "\n"+finalName +
+                            "|"+Quality+"|"+Quantity+
+                            "|"+Date+"|"+Location+"|"+Price+"|0";
+
+
+                    //////////////////////////
+                    String Total_Data = "";
+                    try {
+                        FileInputStream fin = openFileInput("crops.txt");
+                        int a;
+                        StringBuilder temp = new StringBuilder();
+                        while ((a = fin.read()) != -1) {
+                            temp.append((char)a);
+                        }
+                        Total_Data = temp.toString();
+                        fin.close();
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    ///////////////////////////
+                    FileOutputStream fos = null;
+                    try {
+                        fos = openFileOutput("crops.txt", Context.MODE_PRIVATE);
+                        fos.write((Total_Data+content).getBytes());
+                        fos.flush();
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(FarmerUploadRate.this, "Successfuly Uploaded", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(FarmerUploadRate.this, Farmer.class));
+                }
+            }
+        });
+
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
         delayedHide(100);
     }
 

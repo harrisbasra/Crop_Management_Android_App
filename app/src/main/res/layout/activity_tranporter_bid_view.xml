@@ -113,7 +113,7 @@
                 android:paddingLeft="10sp" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/spinnerA"
                 android:layout_width="329dp"
                 android:layout_height="79dp"
                 android:background="@drawable/roundist"

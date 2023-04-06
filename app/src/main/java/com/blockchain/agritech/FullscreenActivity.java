@@ -128,6 +128,8 @@ public class FullscreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        startActivity(new Intent(FullscreenActivity.this, FarmerUploadRate.class));
+
         binding = ActivityFullscreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -235,6 +237,15 @@ public class FullscreenActivity extends AppCompatActivity {
                             }
                             else if(Users[lk].equals("3"+LoginInfo)){
                                 Starter = new Intent(FullscreenActivity.this, Transporter.class);
+                            }
+                            FileOutputStream fos = null;
+                            try {
+                                fos = openFileOutput("WhoLoggedIn.txt", Context.MODE_PRIVATE);
+                                fos.write(NameEdit.getText().toString().getBytes());
+                                fos.flush();
+                                fos.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
                             startActivity(Starter);
                         }
