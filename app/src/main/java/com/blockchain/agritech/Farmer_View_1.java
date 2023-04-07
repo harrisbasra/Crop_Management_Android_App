@@ -15,6 +15,8 @@ import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +27,15 @@ import com.bumptech.glide.request.transition.Transition;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Vector;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -164,6 +174,57 @@ public class Farmer_View_1 extends AppCompatActivity {
         TextView textVew = findViewById(R.id.textView5);
         TextView t220037 = findViewById(R.id.textView6);
         textVew.setText(F);
+
+        String Name = "" ;
+        try {
+            FileInputStream fin = openFileInput("WhoLoggedIn.txt");
+            int a;
+            StringBuilder temp = new StringBuilder();
+            while ((a = fin.read()) != -1) {
+                temp.append((char)a);
+            }
+            Name = temp.toString();
+            fin.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ///////////////////////////////////////////////////
+        String DataFromFile = "" ;
+        try {
+            FileInputStream fin = openFileInput("crops.txt");
+            int a;
+            StringBuilder temp = new StringBuilder();
+            while ((a = fin.read()) != -1) {
+                temp.append((char)a);
+            }
+            DataFromFile = temp.toString();
+            fin.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        ///////////////////////////////////////////////////
+
+        Vector<String[]> data = GetVectorOutOf(DataFromFile); // assuming you have implemented this method
+
+        Toast.makeText(this, String.valueOf(data.size()), Toast.LENGTH_SHORT).show();
+
+        ArrayList<String> filteredList = new ArrayList<>();
+        for (int i=0;i<data.get(0).length;i++) {
+            if (data.get(0)[i].equals(Name)) {
+                filteredList.add(data.get(0)[i] + " uploaded a crop with Quality " + data.get(1)[i] +
+                        " in Quantity: " + data.get(2)[i] + " from " + data.get(4)[i] + " on " +
+                        data.get(3)[i] + " at PKR" + data.get(5)[i] + "\nHighest Offer: PKR" + data.get(6)[i]);
+            }
+        }
+
+        ListView lv = findViewById(R.id.lvlv);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, filteredList);
+        lv.setAdapter(adapter);
+
+
     }
 
     @Override
@@ -183,6 +244,27 @@ public class Farmer_View_1 extends AppCompatActivity {
             show();
         }
     }
+
+
+    public Vector<String[]> GetVectorOutOf(String data) {
+        Vector<String[]> columnData = new Vector<String[]>();
+        String[] rows = data.split("\n");
+        int numFields = rows[0].split("\\|").length;
+        for (int i = 0; i < numFields; i++) {
+            String[] fieldArray = new String[rows.length];
+            for (int j = 0; j < rows.length; j++) {
+                String[] fields = rows[j].split("\\|");
+                fieldArray[j] = fields[i];
+            }
+            columnData.add(fieldArray);
+        }
+        return columnData;
+    }
+
+
+
+
+
 
     private void hide() {
         // Hide UI first

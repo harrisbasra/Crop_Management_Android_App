@@ -128,7 +128,7 @@ public class FullscreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        startActivity(new Intent(FullscreenActivity.this, FarmerUploadRate.class));
+        startActivity(new Intent(FullscreenActivity.this, Farmer_View_1.class));
 
         binding = ActivityFullscreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
