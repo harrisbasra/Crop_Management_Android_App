@@ -15,6 +15,7 @@ import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -209,21 +210,35 @@ public class Farmer_View_1 extends AppCompatActivity {
 
         Vector<String[]> data = GetVectorOutOf(DataFromFile); // assuming you have implemented this method
 
-        Toast.makeText(this, String.valueOf(data.size()), Toast.LENGTH_SHORT).show();
+
 
         ArrayList<String> filteredList = new ArrayList<>();
+        ArrayList<String> remainingList = new ArrayList<>();
         for (int i=0;i<data.get(0).length;i++) {
             if (data.get(0)[i].equals(Name)) {
                 filteredList.add(data.get(0)[i] + " uploaded a crop with Quality " + data.get(1)[i] +
                         " in Quantity: " + data.get(2)[i] + " from " + data.get(4)[i] + " on " +
                         data.get(3)[i] + " at PKR" + data.get(5)[i] + "\nHighest Offer: PKR" + data.get(6)[i]);
+                remainingList.add(LeftOverToString(data, i));
             }
         }
 
-        ListView lv = findViewById(R.id.lvlv);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, filteredList);
-        lv.setAdapter(adapter);
 
+
+        ListView lv = findViewById(R.id.lvlv);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_list_item_1,
+                remainingList);
+        lv.setAdapter(adapter);
+        Toast.makeText(this, String.valueOf(remainingList.size()), Toast.LENGTH_SHORT).show();
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
 
     }
 
@@ -262,7 +277,13 @@ public class Farmer_View_1 extends AppCompatActivity {
     }
 
 
-
+    public String LeftOverToString(Vector<String[]> data, int pos){
+        String Returner = "";
+        for(int i=6;i<data.size();i++){
+            Returner+="|"+data.get(i)[pos];
+        }
+        return Returner;
+    }
 
 
 
