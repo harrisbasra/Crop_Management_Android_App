@@ -7,6 +7,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -229,14 +230,23 @@ public class Farmer_View_1 extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_list_item_1,
-                remainingList);
+                filteredList);
         lv.setAdapter(adapter);
-        Toast.makeText(this, String.valueOf(remainingList.size()), Toast.LENGTH_SHORT).show();
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(Farmer_View_1.this, Farmer_View_2.class);
 
+                i.putExtra("Name", data.get(0)[position]);
+                i.putExtra("Quality", data.get(1)[position]);
+                i.putExtra("Quantity", data.get(2)[position]);
+                i.putExtra("Date", data.get(4)[position]);
+                i.putExtra("Location", data.get(3)[position]);
+                i.putExtra("Price", data.get(5)[position]);
+                i.putExtra("RemString", remainingList.get(position));
+
+                startActivity(i);
             }
         });
 
@@ -279,7 +289,7 @@ public class Farmer_View_1 extends AppCompatActivity {
 
     public String LeftOverToString(Vector<String[]> data, int pos){
         String Returner = "";
-        for(int i=6;i<data.size();i++){
+        for(int i=7;i<data.size();i++){
             Returner+="|"+data.get(i)[pos];
         }
         return Returner;

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,8 +13,14 @@ import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blockchain.agritech.databinding.ActivityFarmerView2Binding;
+
+import java.util.Date;
+import java.util.Vector;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -122,7 +129,38 @@ public class Farmer_View_2 extends AppCompatActivity {
                 toggle();
             }
         });
+        Date h = new Date();
+        String A = String.valueOf(h.getDate());
+        String B = String.valueOf(h.getMonth());
+        String F = "Today,  "+A+"-"+B+"-"+"2022";
+        TextView textVew = findViewById(R.id.textView5);
+        TextView t220037 = findViewById(R.id.textView6);
+        textVew.setText(F);
 
+        Intent intent = getIntent();
+        String message = intent.getStringExtra("RemString");
+
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+
+        String SemiRefinedList[] = message.split("\\|");
+
+
+
+        Vector<String> FullyRefinedList = new Vector<String>();
+
+        for(int i=1;i<SemiRefinedList.length;i++){
+            if(!SemiRefinedList[i].equals("0-") && !SemiRefinedList[i].equals("")){
+                FullyRefinedList.add(SemiRefinedList[i]);
+            }
+        }
+
+        FullyRefinedList = Cleaner(FullyRefinedList);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_list_item_1,
+                FullyRefinedList.toArray(new String[FullyRefinedList.size()]));
+        binding.lvlv.setAdapter(adapter);
 
     }
 
@@ -143,6 +181,31 @@ public class Farmer_View_2 extends AppCompatActivity {
             show();
         }
     }
+
+
+    public Vector<String[]> GetVectorOutOf(String data) {
+        Vector<String[]> columnData = new Vector<String[]>();
+        String[] rows = data.split("\n");
+        int numFields = rows[0].split("\\|").length;
+        for (int i = 0; i < numFields; i++) {
+            String[] fieldArray = new String[rows.length];
+            for (int j = 0; j < rows.length; j++) {
+                String[] fields = rows[j].split("\\|");
+                fieldArray[j] = fields[i];
+            }
+            columnData.add(fieldArray);
+        }
+        return columnData;
+    }
+
+    public static Vector<String> Cleaner(Vector<String> arr) {
+        for (int i = 0; i < arr.size(); i++) {
+            arr.set(i, arr.get(i).replace("-", " has bid PKR "));
+        }
+        return arr;
+    }
+
+
 
     private void hide() {
         // Hide UI first
