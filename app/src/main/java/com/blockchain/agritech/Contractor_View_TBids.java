@@ -5,21 +5,41 @@ import android.annotation.SuppressLint;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.blockchain.agritech.databinding.ActivityTransporterUploadRatesBinding;
+import com.blockchain.agritech.databinding.ActivityContractorViewTbidsBinding;
+import com.blockchain.agritech.databinding.ActivityFarmerView2Binding;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class Transporter_Upload_Rates extends AppCompatActivity {
+public class Contractor_View_TBids extends AppCompatActivity {
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -102,13 +122,13 @@ public class Transporter_Upload_Rates extends AppCompatActivity {
             return false;
         }
     };
-    private ActivityTransporterUploadRatesBinding binding;
+    private ActivityContractorViewTbidsBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityTransporterUploadRatesBinding.inflate(getLayoutInflater());
+        binding = ActivityContractorViewTbidsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         mVisible = true;
@@ -122,7 +142,55 @@ public class Transporter_Upload_Rates extends AppCompatActivity {
                 toggle();
             }
         });
+        Date h = new Date();
+        String A = String.valueOf(h.getDate());
+        String B = String.valueOf(h.getMonth());
+        String F = "Today,  "+A+"-"+B+"-"+"2022";
+        TextView textVew = findViewById(R.id.textView5);
+        TextView t220037 = findViewById(R.id.textView6);
+        textVew.setText(F);
 
+        Intent intent = getIntent();
+
+        String name = intent.getStringExtra("Name");
+        String Quantity = intent.getStringExtra("Quantity");
+        String Location = intent.getStringExtra("Location");
+        String Date = intent.getStringExtra("Date");
+        String Price = intent.getStringExtra("Price");
+
+        DBHelper2 db = new DBHelper2(this);
+        List<String[]> ReqData = db.getDataByContractorNameQuantityAndDate(name, Quantity, Date);
+        if(!(ReqData.size() ==0)) {
+            String[] To_Be_Fed = new String[ReqData.size()];
+
+            for (int i = 0; i < ReqData.size(); i++) {
+                To_Be_Fed[i] = ReqData.get(i)[1] + " has bid " + ReqData.get(i)[2];
+            }
+            Set<String> set = new LinkedHashSet<>(Arrays.asList(To_Be_Fed));
+            To_Be_Fed = set.toArray(new String[0]);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    To_Be_Fed);
+
+            binding.lvlv.setAdapter(adapter);
+            binding.lvlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent i = new Intent(Contractor_View_TBids.this, Contractor_Approves.class);
+
+                    i.putExtra("-", ReqData.get(position)[1]);
+                    i.putExtra("Quantity", Quantity);
+                    i.putExtra("Date", Date);
+                    i.putExtra("Location", Location);
+                    i.putExtra("Price", ReqData.get(position)[2]);
+
+
+
+                    startActivity(i);
+                }
+            });
+        }
     }
 
     @Override
@@ -142,6 +210,34 @@ public class Transporter_Upload_Rates extends AppCompatActivity {
             show();
         }
     }
+
+
+
+
+
+    public Vector<String[]> GetVectorOutOf(String data) {
+        Vector<String[]> columnData = new Vector<String[]>();
+        String[] rows = data.split("\n");
+        int numFields = rows[0].split("\\|").length;
+        for (int i = 0; i < numFields; i++) {
+            String[] fieldArray = new String[rows.length];
+            for (int j = 0; j < rows.length; j++) {
+                String[] fields = rows[j].split("\\|");
+                fieldArray[j] = fields[i];
+            }
+            columnData.add(fieldArray);
+        }
+        return columnData;
+    }
+
+    public static Vector<String> Cleaner(Vector<String> arr) {
+        for (int i = 0; i < arr.size(); i++) {
+            arr.set(i, arr.get(i).replace("-", " has bid PKR "));
+        }
+        return arr;
+    }
+
+
 
     private void hide() {
         // Hide UI first

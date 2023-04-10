@@ -7,7 +7,7 @@
     android:background="?attr/fullscreenBackgroundColor"
     android:backgroundTint="#D16969"
     android:theme="@style/ThemeOverlay.AgriTech.FullscreenContainer"
-    tools:context=".FullscreenActivity">
+    tools:context=".Contractor_View_TBids">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -40,7 +40,6 @@
             tools:ignore="UselessParent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#646F78">

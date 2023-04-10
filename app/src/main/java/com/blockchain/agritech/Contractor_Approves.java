@@ -2,44 +2,47 @@ package com.blockchain.agritech;
 
 import android.annotation.SuppressLint;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.blockchain.agritech.databinding.ActivityContractorTransporterView1Binding;
-import com.blockchain.agritech.databinding.ActivityFarmerView2Binding;
+import com.blockchain.agritech.databinding.ActivityBidViewBinding;
+import com.blockchain.agritech.databinding.ActivityContractorApprovesBinding;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomViewTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class Contractor_Transporter_View_1 extends AppCompatActivity {
+public class Contractor_Approves extends AppCompatActivity {
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -122,28 +125,53 @@ public class Contractor_Transporter_View_1 extends AppCompatActivity {
             return false;
         }
     };
-    private ActivityContractorTransporterView1Binding binding;
+    private ActivityContractorApprovesBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityContractorTransporterView1Binding.inflate(getLayoutInflater());
+        binding = ActivityContractorApprovesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         mVisible = true;
         mControlsView = binding.fullscreenContentControls;
         mContentView = binding.fullscreenContent;
 
-        // Set up the user interaction to manually show or hide the system UI.
-        mContentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggle();
-            }
-        });
 
-        String Name = "" ;
+        ConstraintLayout frameLayout = findViewById(R.id.cl);
+        Glide.with(this)
+                .load("https://images.unsplash.com/photo-1642413597408-183a09361cea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80")
+                .placeholder(R.color.teal_200) // Placeholder image until the image is loaded
+                .error(R.color.light_blue_600) // Error image if the image fails to load
+                .into(new CustomViewTarget<ConstraintLayout, Drawable>(frameLayout) {
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        Toast.makeText(Contractor_Approves.this, "Load Failed", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        getView().setBackground(resource);
+                    }
+
+                    @Override
+                    protected void onResourceCleared(@Nullable Drawable placeholder) {
+                        // handle resource cleared
+                    }
+                });
+
+
+        Intent intent = getIntent();
+
+        String DName = intent.getStringExtra("-");
+        String Quantity = intent.getStringExtra("Quantity");
+        String Location = intent.getStringExtra("Location");
+        String Date = intent.getStringExtra("Date");
+        String Price = intent.getStringExtra("Price");
+
+
+        String Name2 = "";
         try {
             FileInputStream fin = openFileInput("WhoLoggedIn.txt");
             int a;
@@ -151,47 +179,98 @@ public class Contractor_Transporter_View_1 extends AppCompatActivity {
             while ((a = fin.read()) != -1) {
                 temp.append((char)a);
             }
-            Name = temp.toString();
+            Name2 = temp.toString();
             fin.close();
         }
         catch (IOException e) {
             e.printStackTrace();
         }
 
-        Intent intent = getIntent();
-
-        String name = intent.getStringExtra("Name");
-        String Quantity = intent.getStringExtra("Quantity");
-        String Quality = intent.getStringExtra("Quality");
-        String Location = intent.getStringExtra("Location");
-        String Date = intent.getStringExtra("Date");
-        String Price = intent.getStringExtra("Price");
-
-        binding.spinnerA.setText("Name: "+name);
-        binding.textView5.setText("Quantity: "+Quantity);
-        binding.textView4.setText("Date/Location: "+Date+" "+Location);
+        binding.spinnerA.setText("Quantity: "+Quantity);
+        binding.textView5.setText("Date: "+Date);
+        binding.textView4.setText("Location: "+Location);
+        binding.textView6.setText("Price: "+Price);
 
 
-        String finalName = Name;
+
+
+        String finalName = Name2;
         binding.floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!binding.textView6.getText().toString().equals("")){
-                    MyDBHelper db = new MyDBHelper(Contractor_Transporter_View_1.this);
-                    db.addBid(name, finalName, binding.textView6.getText().toString(), Quality,Date);
-                    Toast.makeText(Contractor_Transporter_View_1.this, "Bidded !", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(Contractor_Transporter_View_1.this, Contractor_Option_Menu.class));
+                DBHelper2 db = new DBHelper2(Contractor_Approves.this);
+                db.deleteByContractorTransporterQuantityAndDate(finalName, DName, Quantity, Date, Price);
+                Toast.makeText(Contractor_Approves.this, "Bid Accepted Successfully", Toast.LENGTH_SHORT).show();
+
+                String Writeable = DName+"|"+Quantity+"|"+Date+"|"+Location+"|"+Price;
+                String Reed="";
+                try {
+                    FileInputStream fin = openFileInput("finaltask.txt");
+                    int a;
+                    StringBuilder temp = new StringBuilder();
+                    while ((a = fin.read()) != -1) {
+                        temp.append((char)a);
+                    }
+                    Reed = temp.toString();
+                    fin.close();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(Reed.equals("")){
+
+                }
+                else{
+                    Writeable = Reed + "\n" +Writeable;
+                }
+                FileOutputStream fos = null;
+                try {
+                    fos = openFileOutput("finaltask.txt", Context.MODE_PRIVATE);
+                    fos.write(Writeable.getBytes());
+                    fos.flush();
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
 
-//                Toast.makeText(Contractor_Transporter_View_1.this, name , Toast.LENGTH_SHORT).show();
-//                Toast.makeText(Contractor_Transporter_View_1.this, finalName, Toast.LENGTH_SHORT).show();
-//                Toast.makeText(Contractor_Transporter_View_1.this,binding.textView6.getText().toString() , Toast.LENGTH_SHORT).show();
-//                Toast.makeText(Contractor_Transporter_View_1.this,Quality , Toast.LENGTH_SHORT).show();
-//                Toast.makeText(Contractor_Transporter_View_1.this, Date, Toast.LENGTH_SHORT).show();
+
+                ///////////////////////MAKE IT USELESS////////////////
+
+                String Gett= "";
+                try {
+                    FileInputStream fin = openFileInput("transport.txt");
+                    int a;
+                    StringBuilder temp = new StringBuilder();
+                    while ((a = fin.read()) != -1) {
+                        temp.append((char)a);
+                    }
+                    Gett = temp.toString();
+                    fin.close();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                Gett = Gett.replace("\n"+finalName+"|"+Quantity+"|"+Date, "\n;;"+"|"+Quantity+"|"+Date);
+                FirebaseApp.initializeApp(Contractor_Approves.this);
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("Transport");
+                myRef.setValue(Gett);
+                try {
+                    FileOutputStream fos2 = null;
+                    fos2 = openFileOutput("transport.txt", Context.MODE_PRIVATE);
+                    fos2.write(Gett.getBytes());
+                    fos2.flush();
+                    fos2.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                startActivity(new Intent(Contractor_Approves.this, Contractor_Option_Menu.class));
 
             }
         });
-
 
     }
 
@@ -212,34 +291,6 @@ public class Contractor_Transporter_View_1 extends AppCompatActivity {
             show();
         }
     }
-
-
-
-
-
-    public Vector<String[]> GetVectorOutOf(String data) {
-        Vector<String[]> columnData = new Vector<String[]>();
-        String[] rows = data.split("\n");
-        int numFields = rows[0].split("\\|").length;
-        for (int i = 0; i < numFields; i++) {
-            String[] fieldArray = new String[rows.length];
-            for (int j = 0; j < rows.length; j++) {
-                String[] fields = rows[j].split("\\|");
-                fieldArray[j] = fields[i];
-            }
-            columnData.add(fieldArray);
-        }
-        return columnData;
-    }
-
-    public static Vector<String> Cleaner(Vector<String> arr) {
-        for (int i = 0; i < arr.size(); i++) {
-            arr.set(i, arr.get(i).replace("-", " has bid PKR "));
-        }
-        return arr;
-    }
-
-
 
     private void hide() {
         // Hide UI first

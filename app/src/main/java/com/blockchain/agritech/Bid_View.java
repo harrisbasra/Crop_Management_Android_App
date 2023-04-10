@@ -24,6 +24,9 @@ import com.blockchain.agritech.databinding.ActivityBidViewBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomViewTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -253,7 +256,11 @@ public class Bid_View extends AppCompatActivity {
                 }
 
 
-            Gett.replace("\n"+DeleteName+"|"+Quality+"|"+Quantity, ";;"+"|"+Quality+"|"+Quantity);
+            Gett = Gett.replace("\n"+DeleteName+"|"+Quality+"|"+Quantity, "\n;;"+"|"+Quality+"|"+Quantity);
+                FirebaseApp.initializeApp(Bid_View.this);
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("Contractor");
+                myRef.setValue(Gett);
                 try {
                     FileOutputStream fos2 = null;
                     fos2 = openFileOutput("crops.txt", Context.MODE_PRIVATE);
@@ -264,6 +271,7 @@ public class Bid_View extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                startActivity(new Intent(Bid_View.this, Farmer.class));
 
             }
         });

@@ -167,7 +167,7 @@ public class Contractor_Option_Menu extends AppCompatActivity {
         binding.textView3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(Contractor_Option_Menu.this, Contractor_Transporter_View_1.class);
+                Intent i = new Intent(Contractor_Option_Menu.this, Contractor_Transporter_View_2.class);
                 startActivity(i);
             }
         });

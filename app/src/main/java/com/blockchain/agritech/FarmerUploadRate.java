@@ -25,6 +25,9 @@ import com.blockchain.agritech.databinding.ActivityFarmerUploadrateBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomViewTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -202,9 +205,33 @@ public class FarmerUploadRate extends AppCompatActivity {
                     String Price = binding.textView6.getText().toString();
                     String Quality = binding.spinnerA.getSelectedItem().toString();
 
-                    String content = "\n"+finalName +
-                            "|"+Quality+"|"+Quantity+
-                            "|"+Date+"|"+Location+"|"+Price+"|0";
+                    String Check = "";
+                    try {
+                        FileInputStream fin = openFileInput("fatima.txt");
+                        int a;
+                        StringBuilder temp = new StringBuilder();
+                        while ((a = fin.read()) != -1) {
+                            temp.append((char)a);
+                        }
+                        Check = temp.toString();
+                        fin.close();
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    String content = "";
+                    if(Check.equals("")){
+                        content = finalName +
+                                "|"+Quality+"|"+Quantity+
+                                "|"+Date+"|"+Location+"|"+Price+"|0";
+                    }
+                    else{
+                        content = "\n"+finalName +
+                                "|"+Quality+"|"+Quantity+
+                                "|"+Date+"|"+Location+"|"+Price+"|0";
+                    }
+
+
 
 
                     //////////////////////////
@@ -223,6 +250,10 @@ public class FarmerUploadRate extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     ///////////////////////////
+                    FirebaseApp.initializeApp(FarmerUploadRate.this);
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference("Crops");
+                    myRef.setValue(Total_Data);
                     FileOutputStream fos = null;
                     try {
                         fos = openFileOutput("crops.txt", Context.MODE_PRIVATE);

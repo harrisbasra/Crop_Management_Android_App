@@ -14,7 +14,13 @@
         android:theme="@style/Theme.AgriTech"
         tools:targetApi="31">
         <activity
-            android:name=".Transporter_Upload_Rates"
+            android:name=".Contractor_Approves"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_contractor_approves"
+            android:theme="@style/Theme.AgriTech.Fullscreen" />
+        <activity
+            android:name=".Contractor_View_TBids"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:label="@string/title_activity_transporter_upload_rates"

@@ -221,10 +221,11 @@ public class Contractor_Pre_View_Bid extends AppCompatActivity {
 
         ArrayList<String> filteredList = new ArrayList<>();
         for (int i=0;i<data.get(0).length;i++) {
-            filteredList.add(data.get(0)[i] + " uploaded a crop with Quality " + data.get(1)[i] +
-                    " in Quantity: " + data.get(2)[i] + " from " + data.get(4)[i] + " on " +
-                    data.get(3)[i] + " at \n PKR" + data.get(5)[i]);
-
+            if(!data.get(0)[i].equals(";;")){
+                filteredList.add(data.get(0)[i] + " uploaded a crop with Quality " + data.get(1)[i] +
+                        " in Quantity: " + data.get(2)[i] + " from " + data.get(4)[i] + " on " +
+                        data.get(3)[i] + " at \n PKR" + data.get(5)[i]);
+            }
         }
         ListView lv = findViewById(R.id.lvlv);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(

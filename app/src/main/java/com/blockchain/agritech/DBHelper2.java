@@ -63,6 +63,15 @@ public class DBHelper2 extends SQLiteOpenHelper {
         return result > 0;
     }
 
+    public void deleteByContractorTransporterQuantityAndDate(String contractorName, String transporterName, String quantity, String date, String price) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selection = "ContractorName = ? AND TransporterName = ? AND Quantity = ? AND Date = ? AND ValueBidded = ?";
+        String[] selectionArgs = { contractorName, transporterName, quantity, date, price };
+        db.delete(TABLE_NAME, selection, selectionArgs);
+    }
+
+
+
     public boolean deleteDataByContractorName(String contractorName) {
         SQLiteDatabase db = this.getWritableDatabase();
         int result = db.delete(TABLE_NAME, COL_2 + "=?", new String[]{contractorName});

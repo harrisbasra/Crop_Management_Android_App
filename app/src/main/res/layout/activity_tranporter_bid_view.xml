@@ -7,7 +7,7 @@
     android:background="?attr/fullscreenBackgroundColor"
     android:backgroundTint="#D16969"
     android:theme="@style/ThemeOverlay.AgriTech.FullscreenContainer"
-    tools:context=".FullscreenActivity">
+    tools:context=".Tranporter_Bid_View">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -40,6 +40,7 @@
             tools:ignore="UselessParent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#646F78">
@@ -65,7 +66,7 @@
                 android:background="@drawable/roundist"
                 android:gravity="center_vertical"
                 android:paddingLeft="10sp"
-                android:text="Quantity:"
+                android:text="Date:"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:visibility="visible"
@@ -83,7 +84,7 @@
                 android:background="@drawable/roundist"
                 android:gravity="center_vertical"
                 android:paddingLeft="10sp"
-                android:text="Date / Location:"
+                android:text="Location:"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:visibility="visible"
@@ -94,13 +95,14 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.593" />
 
-            <TextView
+            <EditText
                 android:id="@+id/textView6"
                 android:layout_width="333dp"
                 android:layout_height="76dp"
                 android:background="@drawable/roundist"
                 android:gravity="center_vertical"
-                android:text="Offered Price:"
+                android:hint="Offer A Price:"
+                android:paddingLeft="10sp"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:visibility="visible"
@@ -109,8 +111,7 @@
                 app:layout_constraintHorizontal_bias="0.474"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.751"
-                android:paddingLeft="10sp" />
+                app:layout_constraintVertical_bias="0.751" />
 
             <TextView
                 android:id="@+id/spinnerA"
@@ -119,7 +120,7 @@
                 android:background="@drawable/roundist"
                 android:gravity="center_vertical"
                 android:paddingLeft="10sp"
-                android:text="Quality:"
+                android:text="Quantity:"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:visibility="visible"
@@ -135,7 +136,7 @@
                 android:layout_height="102dp"
                 android:background="@drawable/roundbb"
                 android:gravity="center"
-                android:text="Name"
+                android:text="Transporter"
                 android:textSize="34sp"
                 android:textStyle="bold"
                 android:visibility="visible"

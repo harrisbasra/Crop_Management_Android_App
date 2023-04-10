@@ -7,22 +7,42 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blockchain.agritech.databinding.ActivityFarmerView1Binding;
 import com.blockchain.agritech.databinding.ActivityPlaceBidBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 
 import org.jetbrains.annotations.Nullable;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.time.temporal.Temporal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -153,17 +173,124 @@ public class Place_Bid extends AppCompatActivity {
                         // handle resource cleared
                     }
                 });
+
+        Date h = new Date();
+        String A = String.valueOf(h.getDate());
+        String B = String.valueOf(h.getMonth());
+        String F = "Today,  "+A+"-"+B+"-"+"2022";
+        TextView textVew = findViewById(R.id.textView5);
+        TextView t220037 = findViewById(R.id.textView6);
+        textVew.setText(F);
+
+        String Name = "" ;
+        try {
+            FileInputStream fin = openFileInput("WhoLoggedIn.txt");
+            int a;
+            StringBuilder temp = new StringBuilder();
+            while ((a = fin.read()) != -1) {
+                temp.append((char)a);
+            }
+            Name = temp.toString();
+            fin.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ///////////////////////////////////////////////////
+        String DataFromFile = "" ;
+        try {
+            FileInputStream fin = openFileInput("transport.txt");
+            int a;
+            StringBuilder temp = new StringBuilder();
+            while ((a = fin.read()) != -1) {
+                temp.append((char)a);
+            }
+            DataFromFile = temp.toString();
+            fin.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ///////////////////////////////////////////////////
+
+        Vector<String[]> data = GetVectorOutOf(DataFromFile);
+
+        Vector<String[]> cache = new Vector<String[]>(0); // assuming you have implemented this method
+
+
+
+        ArrayList<String> filteredList = new ArrayList<>();
+        for (int i=0;i<data.get(0).length;i++) {
+                if(!data.get(0)[i].equals(";;")){
+                    filteredList.add(data.get(0)[i] + " must transport crop with Quantity " + data.get(1)[i] +
+                            " from " + data.get(3)[i] + " on " +
+                            data.get(2)[i] + " at \n PKR " + data.get(4)[i]);
+                }
+        }
+
+        ListView lv = findViewById(R.id.lvlv);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_list_item_1,
+                filteredList);
+        lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(Place_Bid.this, Tranporter_Bid_View.class);
+
+                i.putExtra("Name", extractInfo(filteredList.get(position),1));
+                i.putExtra("Quantity", extractInfo(filteredList.get(position),2));
+                i.putExtra("Location", extractInfo(filteredList.get(position),3));
+                i.putExtra("Date", extractInfo(filteredList.get(position),4));
+                i.putExtra("Price", extractInfo(filteredList.get(position), 5));
+
+
+                startActivity(i);
+            }
+        });
+
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
         delayedHide(100);
     }
+
+    public String extractInfo(String input, int infoType) {
+        String[] words = input.split(" ");
+        String info = "";
+
+        switch (infoType) {
+            case 1: // Name
+                info = words[0];
+                break;
+            case 2: // Quantity
+                info = words[6];
+                break;
+            case 3: // Location
+                info = words[8];
+                break;
+            case 4: // Date
+                info = words[10];
+                break;
+            case 5: // Price
+                info = words[words.length-1];
+                break;
+            default:
+                Log.e("Invalid info type.", "");
+                break;
+        }
+
+        return info;
+    }
+
+
+
 
     private void toggle() {
         if (mVisible) {
@@ -172,6 +299,30 @@ public class Place_Bid extends AppCompatActivity {
             show();
         }
     }
+
+
+
+
+
+
+    public Vector<String[]> GetVectorOutOf(String data) {
+        Vector<String[]> columnData = new Vector<>();
+        String[] rows = data.split("\n");
+        int numFields = rows[0].split("\\|").length;
+        for (int i = 0; i < numFields; i++) {
+            String[] fieldArray = new String[rows.length];
+            for (int j = 0; j < rows.length; j++) {
+                String[] fields = rows[j].split("\\|");
+                fieldArray[j] = fields[i];
+            }
+            columnData.add(fieldArray);
+        }
+        return columnData;
+    }
+
+
+
+
 
     private void hide() {
         // Hide UI first

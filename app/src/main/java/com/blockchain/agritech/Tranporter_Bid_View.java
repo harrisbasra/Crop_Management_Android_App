@@ -2,9 +2,15 @@ package com.blockchain.agritech;
 
 import android.annotation.SuppressLint;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,8 +18,22 @@ import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.widget.Toast;
 
+import com.blockchain.agritech.databinding.ActivityBidViewBinding;
 import com.blockchain.agritech.databinding.ActivityTranporterBidViewBinding;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomViewTarget;
+import com.bumptech.glide.request.transition.Transition;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -122,7 +142,70 @@ public class Tranporter_Bid_View extends AppCompatActivity {
                 toggle();
             }
         });
+        ConstraintLayout frameLayout = findViewById(R.id.cl);
+        Glide.with(this)
+                .load("https://images.unsplash.com/photo-1642413597408-183a09361cea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80")
+                .placeholder(R.color.teal_200) // Placeholder image until the image is loaded
+                .error(R.color.light_blue_600) // Error image if the image fails to load
+                .into(new CustomViewTarget<ConstraintLayout, Drawable>(frameLayout) {
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        Toast.makeText(Tranporter_Bid_View.this, "Load Failed", Toast.LENGTH_SHORT).show();
+                    }
 
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        getView().setBackground(resource);
+                    }
+
+                    @Override
+                    protected void onResourceCleared(@Nullable Drawable placeholder) {
+                        // handle resource cleared
+                    }
+                });
+
+
+        Intent intent = getIntent();
+
+        String Name = intent.getStringExtra("Name");
+        String Quantity = intent.getStringExtra("Quantity");
+        String Location = intent.getStringExtra("Location");
+        String Date = intent.getStringExtra("Date");
+        String Price = intent.getStringExtra("Price");
+
+        binding.spinnerA.setText("Quantity: "+Quantity);
+        binding.textView5.setText("Date: "+Date);
+        binding.textView4.setText("Location: "+Location);
+
+        String Name2 = "";
+        try {
+            FileInputStream fin = openFileInput("WhoLoggedIn.txt");
+            int a;
+            StringBuilder temp = new StringBuilder();
+            while ((a = fin.read()) != -1) {
+                temp.append((char)a);
+            }
+            Name2 = temp.toString();
+            fin.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String finalName = Name2;
+        binding.floatingActionButton3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!binding.textView6.getText().toString().equals("")){
+                    DBHelper2 db = new DBHelper2(Tranporter_Bid_View.this);
+                    db.insertData(Name, finalName, binding.textView6.getText().toString(), Quantity, Date);
+                    Toast.makeText(Tranporter_Bid_View.this, "Bidded!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Tranporter_Bid_View.this, Transporter.class));
+                }
+
+
+            }
+        });
 
     }
 

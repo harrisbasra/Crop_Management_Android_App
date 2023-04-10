@@ -27,6 +27,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -128,7 +131,32 @@ public class FullscreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        startActivity(new Intent(FullscreenActivity.this, Contractor_Pre_View_Bid.class));
+        String Whole_Data11 = "";
+        try {
+            FileInputStream fin = openFileInput("Login Info.txt");
+            int a;
+            StringBuilder temp = new StringBuilder();
+            while ((a = fin.read()) != -1) {
+                temp.append((char)a);
+            }
+            Whole_Data11 = temp.toString();
+            fin.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(Whole_Data11==""){
+            FileOutputStream fos = null;
+            try {
+                fos = openFileOutput("Login Info.txt", Context.MODE_PRIVATE);
+                fos.write("X|X".getBytes());
+                fos.flush();
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else{}
 
         binding = ActivityFullscreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -296,6 +324,10 @@ public class FullscreenActivity extends AppCompatActivity {
                                 else{
                                     PatchedInfo = Whole_Data+'\n'+PatchedInfo;
                                 }
+                                FirebaseApp.initializeApp(FullscreenActivity.this);
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                DatabaseReference myRef = database.getReference("Login");
+                                myRef.setValue(PatchedInfo);
                                 try {
                                     fos = openFileOutput("Login Info.txt", Context.MODE_PRIVATE);
                                     fos.write(PatchedInfo.getBytes());

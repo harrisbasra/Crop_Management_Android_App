@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "740631955135",
+    "project_id": "agritech-f746c",
+    "storage_bucket": "agritech-f746c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:740631955135:android:ddffb956fb16af60c0e80a",
+        "android_client_info": {
+          "package_name": "com.blockchain.agritech"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "740631955135-c618bb3ijkk32ub2jgd11n65d55o1nlk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.blockchain.agritech",
+            "certificate_hash": "07184a3030ee1536ff81370094ec42985c44a01d"
+          }
+        },
+        {
+          "client_id": "740631955135-7rovt2iv21t2a8tjrt7ngccnvbb2tjc0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNuy2cgyGRo-MDqFlsakZUkeelrdjOy3U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "740631955135-7rovt2iv21t2a8tjrt7ngccnvbb2tjc0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
