@@ -35,8 +35,11 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -207,24 +210,24 @@ public class Farmer_View_1 extends AppCompatActivity {
         catch (IOException e) {
             e.printStackTrace();
         }
+
         ///////////////////////////////////////////////////
 
         Vector<String[]> data = GetVectorOutOf(DataFromFile); // assuming you have implemented this method
 
+        Vector<String[]> cache = new Vector<String[]>(0); // assuming you have implemented this method
+
 
 
         ArrayList<String> filteredList = new ArrayList<>();
-        ArrayList<String> remainingList = new ArrayList<>();
         for (int i=0;i<data.get(0).length;i++) {
             if (data.get(0)[i].equals(Name)) {
+
                 filteredList.add(data.get(0)[i] + " uploaded a crop with Quality " + data.get(1)[i] +
                         " in Quantity: " + data.get(2)[i] + " from " + data.get(4)[i] + " on " +
-                        data.get(3)[i] + " at PKR" + data.get(5)[i] + "\nHighest Offer: PKR" + data.get(6)[i]);
-                remainingList.add(LeftOverToString(data, i));
+                        data.get(3)[i] + " at \n PKR" + data.get(5)[i]);
             }
         }
-
-
 
         ListView lv = findViewById(R.id.lvlv);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -238,13 +241,13 @@ public class Farmer_View_1 extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(Farmer_View_1.this, Farmer_View_2.class);
 
-                i.putExtra("Name", data.get(0)[position]);
-                i.putExtra("Quality", data.get(1)[position]);
-                i.putExtra("Quantity", data.get(2)[position]);
-                i.putExtra("Date", data.get(4)[position]);
-                i.putExtra("Location", data.get(3)[position]);
-                i.putExtra("Price", data.get(5)[position]);
-                i.putExtra("RemString", remainingList.get(position));
+                i.putExtra("Name", extractInfo(filteredList.get(position),1));
+                i.putExtra("Quantity", extractInfo(filteredList.get(position),2));
+                i.putExtra("Location", extractInfo(filteredList.get(position),3));
+                i.putExtra("Date", extractInfo(filteredList.get(position),4));
+                i.putExtra("Price", extractInfo(filteredList.get(position),5));
+                i.putExtra("Quality", extractInfo(filteredList.get(position),6));
+
 
                 startActivity(i);
             }
@@ -255,12 +258,46 @@ public class Farmer_View_1 extends AppCompatActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
         delayedHide(100);
     }
+
+    public static String extractInfo(String input, int infoType) {
+        String[] parts = input.split(" ");
+        String name = parts[0];
+        String quality = parts[6];
+        String quantity = parts[9];
+        String location = parts[11];
+        String date = parts[13];
+        String price = parts[13];
+
+        switch (infoType) {
+            case 1:
+                return name;
+            case 2:
+                return quantity;
+            case 3:
+                return location;
+            case 4:
+                return date;
+            case 5:
+                return price;
+            case 6:
+                return quality;
+            default:
+                throw new IllegalArgumentException("Invalid infoType: " + infoType);
+        }
+    }
+    public static String[] removeElement(String[] array, int index) {
+        String[] newArray = new String[array.length - 1];
+        for (int i = 0, k = 0; i < array.length; i++) {
+            if (i == index) {
+                continue;
+            }
+            newArray[k++] = array[i];
+        }
+        return newArray;
+    }
+
 
     private void toggle() {
         if (mVisible) {
@@ -269,6 +306,10 @@ public class Farmer_View_1 extends AppCompatActivity {
             show();
         }
     }
+
+
+
+
 
 
     public Vector<String[]> GetVectorOutOf(String data) {

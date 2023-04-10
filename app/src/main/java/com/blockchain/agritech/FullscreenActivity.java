@@ -128,7 +128,7 @@ public class FullscreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        startActivity(new Intent(FullscreenActivity.this, Farmer_View_1.class));
+        startActivity(new Intent(FullscreenActivity.this, Contractor_Pre_View_Bid.class));
 
         binding = ActivityFullscreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -167,13 +167,13 @@ public class FullscreenActivity extends AppCompatActivity {
         EditText NameEdit = (EditText) findViewById(R.id.editTextTextPersonName);
         EditText EmailEdit = (EditText) findViewById(R.id.editTextTextPersonName2);
         EditText PhoneNoEdit = (EditText) findViewById(R.id.editTextTextPersonName3);
-      //  EditText PassEdit = (EditText) findViewById(R.id.editTextTextPersonName4);
+        //  EditText PassEdit = (EditText) findViewById(R.id.editTextTextPersonName4);
         Button B1 = (Button) findViewById(R.id.button);
         Button B2 = (Button) findViewById(R.id.button2);
         NameEdit.setVisibility(View.INVISIBLE);
         EmailEdit.setVisibility(View.INVISIBLE);
         PhoneNoEdit.setVisibility(View.INVISIBLE);
-   //     PassEdit.setVisibility(View.INVISIBLE);
+        //     PassEdit.setVisibility(View.INVISIBLE);
         RadioButton r1 = findViewById(R.id.radioButton1);
         RadioButton r2 = findViewById(R.id.radioButton2);
         RadioButton r3 = findViewById(R.id.radioButton3);
@@ -191,7 +191,7 @@ public class FullscreenActivity extends AppCompatActivity {
                 EmailEdit.setVisibility(View.VISIBLE);
                 EmailEdit.setHint("Enter Password");
                 PhoneNoEdit.setVisibility(View.GONE);
-      //          PassEdit.setVisibility(View.GONE);
+                //          PassEdit.setVisibility(View.GONE);
 
             }
 
@@ -220,7 +220,7 @@ public class FullscreenActivity extends AppCompatActivity {
                         int lk = -1;
                         for(int i=0;i<Users.length;i++){
 
-                            
+
                             if((Users[i].equals("1"+LoginInfo))||(Users[i].equals("2"+LoginInfo))||(Users[i].equals("3"+LoginInfo))){
                                 lk = i;
                                 break;
@@ -326,7 +326,7 @@ public class FullscreenActivity extends AppCompatActivity {
                     PhoneNoEdit.setVisibility(View.VISIBLE);
                     PhoneNoEdit.setHint("New Password");
                     PhoneNoEdit.setInputType(NameEdit.getInputType());
-          //          PassEdit.setVisibility(View.GONE);
+                    //          PassEdit.setVisibility(View.GONE);
                     r1.setVisibility(View.VISIBLE);
                     r2.setVisibility(View.VISIBLE);
                     r3.setVisibility(View.VISIBLE);

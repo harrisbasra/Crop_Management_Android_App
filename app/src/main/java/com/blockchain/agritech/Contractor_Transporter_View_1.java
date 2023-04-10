@@ -5,15 +5,35 @@ import android.annotation.SuppressLint;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blockchain.agritech.databinding.ActivityContractorTransporterView1Binding;
+import com.blockchain.agritech.databinding.ActivityFarmerView2Binding;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -123,6 +143,54 @@ public class Contractor_Transporter_View_1 extends AppCompatActivity {
             }
         });
 
+        String Name = "" ;
+        try {
+            FileInputStream fin = openFileInput("WhoLoggedIn.txt");
+            int a;
+            StringBuilder temp = new StringBuilder();
+            while ((a = fin.read()) != -1) {
+                temp.append((char)a);
+            }
+            Name = temp.toString();
+            fin.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Intent intent = getIntent();
+
+        String name = intent.getStringExtra("Name");
+        String Quantity = intent.getStringExtra("Quantity");
+        String Quality = intent.getStringExtra("Quality");
+        String Location = intent.getStringExtra("Location");
+        String Date = intent.getStringExtra("Date");
+        String Price = intent.getStringExtra("Price");
+
+        binding.spinnerA.setText("Name: "+name);
+        binding.textView5.setText("Quantity: "+Quantity);
+        binding.textView4.setText("Date/Location: "+Date+" "+Location);
+
+
+        String finalName = Name;
+        binding.floatingActionButton3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!binding.textView6.getText().toString().equals("")){
+                    MyDBHelper db = new MyDBHelper(Contractor_Transporter_View_1.this);
+                    db.addBid(name, finalName, binding.textView6.getText().toString(), Quality,Date);
+                    Toast.makeText(Contractor_Transporter_View_1.this, "Bidded !", Toast.LENGTH_SHORT).show();
+                }
+
+//                Toast.makeText(Contractor_Transporter_View_1.this, name , Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Contractor_Transporter_View_1.this, finalName, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Contractor_Transporter_View_1.this,binding.textView6.getText().toString() , Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Contractor_Transporter_View_1.this,Quality , Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Contractor_Transporter_View_1.this, Date, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
 
     }
 
@@ -143,6 +211,34 @@ public class Contractor_Transporter_View_1 extends AppCompatActivity {
             show();
         }
     }
+
+
+
+
+
+    public Vector<String[]> GetVectorOutOf(String data) {
+        Vector<String[]> columnData = new Vector<String[]>();
+        String[] rows = data.split("\n");
+        int numFields = rows[0].split("\\|").length;
+        for (int i = 0; i < numFields; i++) {
+            String[] fieldArray = new String[rows.length];
+            for (int j = 0; j < rows.length; j++) {
+                String[] fields = rows[j].split("\\|");
+                fieldArray[j] = fields[i];
+            }
+            columnData.add(fieldArray);
+        }
+        return columnData;
+    }
+
+    public static Vector<String> Cleaner(Vector<String> arr) {
+        for (int i = 0; i < arr.size(); i++) {
+            arr.set(i, arr.get(i).replace("-", " has bid PKR "));
+        }
+        return arr;
+    }
+
+
 
     private void hide() {
         // Hide UI first

@@ -8,6 +8,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +24,15 @@ import com.blockchain.agritech.databinding.ActivityBidViewBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomViewTarget;
 import com.bumptech.glide.request.transition.Transition;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -151,6 +162,112 @@ public class Bid_View extends AppCompatActivity {
                         // handle resource cleared
                     }
                 });
+
+
+        Intent intent = getIntent();
+
+        String DeleteName = intent.getStringExtra("-");
+        String Name = intent.getStringExtra("Bidder");
+        String Quality = intent.getStringExtra("Quality");
+        String Quantity = intent.getStringExtra("Quantity");
+        String Location = intent.getStringExtra("Location");
+        String Date = intent.getStringExtra("Date/Location");
+        String Price = intent.getStringExtra("Price");
+
+
+        binding.spinnerA.setText("Quality: "+Quality);
+        binding.textView5.setText("Quantity: "+Quantity);
+        binding.textView4.setText("Date: "+Date+" "+Location);
+        binding.textView6.setText("Offered Price: "+Price);
+
+
+        String Name2 = "";
+        try {
+            FileInputStream fin = openFileInput("WhoLoggedIn.txt");
+            int a;
+            StringBuilder temp = new StringBuilder();
+            while ((a = fin.read()) != -1) {
+                temp.append((char)a);
+            }
+            Name2 = temp.toString();
+            fin.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String finalName = Name2;
+        binding.floatingActionButton3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyDBHelper db = new MyDBHelper(Bid_View.this);
+                db.deleteBidByUploaderAndQualityAndDate(finalName, Quality, Date);
+                Toast.makeText(Bid_View.this, "Bid Accepted Successfully", Toast.LENGTH_SHORT).show();
+                String Writeable = Name+"|"+Quantity+"|"+Date+"|"+Location+"|"+Price;
+                String Reed="";
+                try {
+                    FileInputStream fin = openFileInput("transport.txt");
+                    int a;
+                    StringBuilder temp = new StringBuilder();
+                    while ((a = fin.read()) != -1) {
+                        temp.append((char)a);
+                    }
+                    Reed = temp.toString();
+                    fin.close();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(Reed.equals("")){
+
+                }
+                else{
+                    Writeable = Reed + "\n" +Writeable;
+                }
+                FileOutputStream fos = null;
+                try {
+                    fos = openFileOutput("transport.txt", Context.MODE_PRIVATE);
+                    fos.write(Writeable.getBytes());
+                    fos.flush();
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                ///////////////////////MAKE IT USELESS////////////////
+
+                String Gett= "";
+                try {
+                    FileInputStream fin = openFileInput("crops.txt");
+                    int a;
+                    StringBuilder temp = new StringBuilder();
+                    while ((a = fin.read()) != -1) {
+                        temp.append((char)a);
+                    }
+                    Gett = temp.toString();
+                    fin.close();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            Gett.replace("\n"+DeleteName+"|"+Quality+"|"+Quantity, ";;"+"|"+Quality+"|"+Quantity);
+                try {
+                    FileOutputStream fos2 = null;
+                    fos2 = openFileOutput("crops.txt", Context.MODE_PRIVATE);
+                    fos2.write(Gett.getBytes());
+                    fos2.flush();
+                    fos2.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+
     }
 
     @Override

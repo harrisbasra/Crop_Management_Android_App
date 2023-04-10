@@ -67,7 +67,7 @@
                 android:layout_height="102dp"
                 android:background="@drawable/roundbb"
                 android:gravity="center"
-                android:text="Update Rate"
+                android:text="Bid Transportations"
                 android:textSize="34sp"
                 android:textStyle="bold"
                 android:visibility="visible"

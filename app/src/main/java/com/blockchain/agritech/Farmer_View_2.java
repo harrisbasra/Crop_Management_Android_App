@@ -5,21 +5,33 @@ import android.annotation.SuppressLint;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blockchain.agritech.databinding.ActivityFarmerView2Binding;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 /**
@@ -138,29 +150,81 @@ public class Farmer_View_2 extends AppCompatActivity {
         textVew.setText(F);
 
         Intent intent = getIntent();
-        String message = intent.getStringExtra("RemString");
 
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        String name = intent.getStringExtra("Name");
+        String Quality = intent.getStringExtra("Quality");
+        String Quantity = intent.getStringExtra("Quantity");
+        String Location = intent.getStringExtra("Location");
+        String Date = intent.getStringExtra("Date");
+        String Price = intent.getStringExtra("Price");
 
-        String SemiRefinedList[] = message.split("\\|");
 
 
 
-        Vector<String> FullyRefinedList = new Vector<String>();
 
-        for(int i=1;i<SemiRefinedList.length;i++){
-            if(!SemiRefinedList[i].equals("0-") && !SemiRefinedList[i].equals("")){
-                FullyRefinedList.add(SemiRefinedList[i]);
+        // Create a new instance of your DBConnector class
+        MyDBHelper db = new MyDBHelper(this);
+
+//        dbConnector.addBid("B", "A", "5", "A", "4/9/2023");
+//        dbConnector.addBid("B", "X", "17", "B", "4/9/2023");
+//        dbConnector.addBid("Ammar", "A", "24", "C", "4/9/2023");
+//        dbConnector.addBid("Ammar", "X", "31", "B", "4/9/2023");
+//        dbConnector.addBid("B", "A", "19", "A", "4/9/2023");
+
+
+        String Name = "" ;
+        try {
+            FileInputStream fin = openFileInput("WhoLoggedIn.txt");
+            int a;
+            StringBuilder temp = new StringBuilder();
+            while ((a = fin.read()) != -1) {
+                temp.append((char)a);
             }
+            Name = temp.toString();
+            fin.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
         }
 
-        FullyRefinedList = Cleaner(FullyRefinedList);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_list_item_1,
-                FullyRefinedList.toArray(new String[FullyRefinedList.size()]));
-        binding.lvlv.setAdapter(adapter);
+
+        List<String[]> ReqData = db.getBidsByBidderAndUploader(Name, Quality, Date);
+
+        if(!(ReqData.size() ==0)){
+            String[] To_Be_Fed = new String[ReqData.get(0).length];
+
+            for(int i=0;i<ReqData.get(0).length;i++){
+                To_Be_Fed[i] = ReqData.get(0)[0] +" has bid "+ ReqData.get(0)[1];
+            }
+            Set<String> set = new LinkedHashSet<>(Arrays.asList(To_Be_Fed));
+            To_Be_Fed = set.toArray(new String[0]);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    To_Be_Fed);
+
+            binding.lvlv.setAdapter(adapter);
+            String finalName = Name;
+            binding.lvlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent i = new Intent(Farmer_View_2.this, Bid_View.class);
+                    i.putExtra("-", finalName);
+                    i.putExtra("Quality", Quality);
+                    i.putExtra("Quantity", Quantity);
+                    i.putExtra("Date/Location", Date);
+                    i.putExtra("Location", Location);
+                    i.putExtra("Price", ReqData.get(0)[1]);
+                    i.putExtra("Bidder", ReqData.get(0)[0]);
+                    startActivity(i);
+                }
+            });
+        }
+
+
+
+
 
     }
 
@@ -181,6 +245,9 @@ public class Farmer_View_2 extends AppCompatActivity {
             show();
         }
     }
+
+
+
 
 
     public Vector<String[]> GetVectorOutOf(String data) {
