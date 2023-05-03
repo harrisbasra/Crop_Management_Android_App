@@ -133,11 +133,6 @@ public class Test extends AppCompatActivity {
             public void onClick(View v) {
                 String S3 = binding.gettt.getText().toString();
                 Toast.makeText(Test.this, S3, Toast.LENGTH_SHORT).show();
-
-
-
-
-
             }
         });
 

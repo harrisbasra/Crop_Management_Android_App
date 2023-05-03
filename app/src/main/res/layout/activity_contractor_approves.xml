@@ -121,7 +121,7 @@
                 android:background="@drawable/roundist"
                 android:gravity="center_vertical"
                 android:paddingLeft="10sp"
-                android:text="Quality:"
+                android:text="CropType:"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:visibility="visible"

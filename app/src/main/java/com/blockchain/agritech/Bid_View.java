@@ -174,13 +174,18 @@ public class Bid_View extends AppCompatActivity {
         String Quality = intent.getStringExtra("Quality");
         String Quantity = intent.getStringExtra("Quantity");
         String Location = intent.getStringExtra("Location");
-        String Date = intent.getStringExtra("Date/Location");
+        String Temperature = intent.getStringExtra("Temperature");
         String Price = intent.getStringExtra("Price");
+        String Pesticides = intent.getStringExtra("Pesticides");
+        String Rainfall = intent.getStringExtra("Rainfall");
 
 
-        binding.spinnerA.setText("Quality: "+Quality);
+        binding.spinnerA.setText("CropType: "+Quality);
         binding.textView5.setText("Quantity: "+Quantity);
-        binding.textView4.setText("Date: "+Date+" "+Location);
+        binding.textView4.setText("Location: "+Location);
+        binding.textView10.setText("Rainfall: "+Rainfall);
+        binding.textView11.setText("Pesticides: "+Pesticides);
+        binding.textView12.setText("Temperature: "+Temperature);
         binding.textView6.setText("Offered Price: "+Price);
 
 
@@ -204,9 +209,9 @@ public class Bid_View extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 MyDBHelper db = new MyDBHelper(Bid_View.this);
-                db.deleteBidByUploaderAndQualityAndDate(finalName, Quality, Date);
+                db.deleteBidByUploaderAndQualityAndDate(finalName, Quality, Temperature);
                 Toast.makeText(Bid_View.this, "Bid Accepted Successfully", Toast.LENGTH_SHORT).show();
-                String Writeable = Name+"|"+Quantity+"|"+Date+"|"+Location+"|"+Price;
+                String Writeable = Name+"|"+Quantity+"|"+Temperature+"|"+Location+"|"+Price;
                 String Reed="";
                 try {
                     FileInputStream fin = openFileInput("transport.txt");

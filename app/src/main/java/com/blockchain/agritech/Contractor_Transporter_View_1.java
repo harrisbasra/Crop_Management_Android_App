@@ -166,10 +166,15 @@ public class Contractor_Transporter_View_1 extends AppCompatActivity {
         String Location = intent.getStringExtra("Location");
         String Date = intent.getStringExtra("Date");
         String Price = intent.getStringExtra("Price");
+        String Rainfall = intent.getStringExtra("Rainfall");
+        String Pesticides = intent.getStringExtra("Pesticides");
 
         binding.spinnerA.setText("Name: "+name);
         binding.textView5.setText("Quantity: "+Quantity);
-        binding.textView4.setText("Date/Location: "+Date+" "+Location);
+        binding.textView4.setText("Location: "+Location);
+        binding.textView13.setText("Rainfall: "+Rainfall);
+        binding.textView14.setText("Temperature: "+Date);
+        binding.textView15.setText("Pesticides: "+Pesticides);
 
 
         String finalName = Name;

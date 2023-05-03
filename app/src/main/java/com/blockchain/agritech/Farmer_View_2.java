@@ -157,10 +157,8 @@ public class Farmer_View_2 extends AppCompatActivity {
         String Location = intent.getStringExtra("Location");
         String Date = intent.getStringExtra("Date");
         String Price = intent.getStringExtra("Price");
-
-
-
-
+        String Pesticides = intent.getStringExtra("Pesticides");
+        String Rainfall = intent.getStringExtra("Rainfall");
 
         // Create a new instance of your DBConnector class
         MyDBHelper db = new MyDBHelper(this);
@@ -213,8 +211,10 @@ public class Farmer_View_2 extends AppCompatActivity {
                     i.putExtra("-", finalName);
                     i.putExtra("Quality", Quality);
                     i.putExtra("Quantity", Quantity);
-                    i.putExtra("Date/Location", Date);
+                    i.putExtra("Temperature", Date);
                     i.putExtra("Location", Location);
+                    i.putExtra("Pesticides", Pesticides);
+                    i.putExtra("Rainfall", Rainfall);
                     i.putExtra("Price", ReqData.get(0)[1]);
                     i.putExtra("Bidder", ReqData.get(0)[0]);
                     startActivity(i);

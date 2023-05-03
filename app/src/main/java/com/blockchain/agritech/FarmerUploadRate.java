@@ -200,10 +200,12 @@ public class FarmerUploadRate extends AppCompatActivity {
                         (!TextUtils.isEmpty(binding.textView6.getText())))
                 {
                     String Quantity = binding.textView5.getText().toString();
-                    String Date = binding.textView8.getText().toString();
-                    String Location = binding.textView4.getText().toString();
+                    String Temperature = binding.textView8.getText().toString();
+                    String Location = binding.textView2.getText().toString();
                     String Price = binding.textView6.getText().toString();
                     String Quality = binding.spinnerA.getSelectedItem().toString();
+                    String Rainfall = binding.textView4.getText().toString();
+                    String Pesticides = binding.textView9.getText().toString();
 
                     String Check = "";
                     try {
@@ -223,12 +225,12 @@ public class FarmerUploadRate extends AppCompatActivity {
                     if(Check.equals("")){
                         content = finalName +
                                 "|"+Quality+"|"+Quantity+
-                                "|"+Date+"|"+Location+"|"+Price+"|0";
+                                "|"+Temperature+"|"+Location+"|"+Price+"|"+Rainfall+"|"+Pesticides+"|0";
                     }
                     else{
                         content = "\n"+finalName +
                                 "|"+Quality+"|"+Quantity+
-                                "|"+Date+"|"+Location+"|"+Price+"|0";
+                                "|"+Temperature+"|"+Location+"|"+Price+"|"+Rainfall+"|"+Pesticides+"|0";
                     }
 
 

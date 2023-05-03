@@ -222,9 +222,9 @@ public class Contractor_Pre_View_Bid extends AppCompatActivity {
         ArrayList<String> filteredList = new ArrayList<>();
         for (int i=0;i<data.get(0).length;i++) {
             if(!data.get(0)[i].equals(";;")){
-                filteredList.add(data.get(0)[i] + " uploaded a crop with Quality " + data.get(1)[i] +
-                        " in Quantity: " + data.get(2)[i] + " from " + data.get(4)[i] + " on " +
-                        data.get(3)[i] + " at \n PKR" + data.get(5)[i]);
+                filteredList.add(data.get(0)[i] + " uploaded a crop with CropType " + data.get(1)[i] +
+                        " in Quantity: " + data.get(2)[i] + " from " + data.get(4)[i] + " on⁰C " +
+                        data.get(3)[i] + " at \n PKR" + data.get(5)[i]+" Pesticides: "+data.get(7)[i]+" Rainfall: "+data.get(6)[i]);
             }
         }
         ListView lv = findViewById(R.id.lvlv);
@@ -244,6 +244,8 @@ public class Contractor_Pre_View_Bid extends AppCompatActivity {
                 i.putExtra("Date", extractInfo(filteredList.get(position),4));
                 i.putExtra("Price", extractInfo(filteredList.get(position),5));
                 i.putExtra("Quality", extractInfo(filteredList.get(position),6));
+                i.putExtra("Rainfall", extractInfo(filteredList.get(position),7));
+                i.putExtra("Pesticides", extractInfo(filteredList.get(position),8));
 
                 startActivity(i);
             }
@@ -287,6 +289,8 @@ public class Contractor_Pre_View_Bid extends AppCompatActivity {
         String location = parts[11];
         String date = parts[13];
         String price = parts[13];
+        String Rainfall = parts[parts.length-1];
+        String Pesticides = parts[parts.length-3];
 
         switch (infoType) {
             case 1:
@@ -301,6 +305,10 @@ public class Contractor_Pre_View_Bid extends AppCompatActivity {
                 return price;
             case 6:
                 return quality;
+            case 7:
+                return Rainfall;
+            case 8:
+                return Pesticides;
             default:
                 throw new IllegalArgumentException("Invalid infoType: " + infoType);
         }
